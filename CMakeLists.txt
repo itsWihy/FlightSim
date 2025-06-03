@@ -18,5 +18,6 @@ set (OpenGL_GL_PREFERENCE GLVND)
 include_directories(/usr/local/include)
 link_directories(/usr/local/lib/glad)
 
-add_executable(FlightSimulatorHopefully main.cpp )
+add_executable(FlightSimulatorHopefully src/main.cpp
+        include/FlightSimulatorHopefully/GLFWInitializer.h)
 target_link_libraries( FlightSimulatorHopefully ${OPENGL_LIBRARIES} glfw glad )

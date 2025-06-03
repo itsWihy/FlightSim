@@ -3,21 +3,23 @@
 
 #include <iostream>
 
+#include "../include/FlightSimulatorHopefully/GLFWInitializer.h"
+
 void framebuffer_size_callback(GLFWwindow *window, int width, int height);
 
 void processInput(GLFWwindow *window);
 
-// settings
 const unsigned int SCR_WIDTH = 800;
 const unsigned int SCR_HEIGHT = 600;
 
-const char *vertexShaderSource = "#version 330 core\n"
+const auto vertexShaderSource = "#version 330 core\n"
         "layout (location = 0) in vec3 aPos;\n"
         "void main()\n"
         "{\n"
         "   gl_Position = vec4(aPos.x, aPos.y, aPos.z, 1.0);\n"
         "}\0";
-const char *fragmentShaderSource = "#version 330 core\n"
+
+const auto fragmentShaderSource = "#version 330 core\n"
         "out vec4 FragColor;\n"
         "void main()\n"
         "{\n"
@@ -25,25 +27,16 @@ const char *fragmentShaderSource = "#version 330 core\n"
         "}\n\0";
 
 int main() {
-    // glfw: initialize and configure
-    // ------------------------------
-    glfwInit();
-    glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
-    glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
-    glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
+    initializeGLFW();
 
-#ifdef __APPLE__
-    glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
-#endif
+    GLFWwindow *window = glfwCreateWindow(SCR_WIDTH, SCR_HEIGHT, "LearnOpenGL", nullptr, nullptr);
 
-    // glfw window creation
-    // --------------------
-    GLFWwindow *window = glfwCreateWindow(SCR_WIDTH, SCR_HEIGHT, "LearnOpenGL", NULL, NULL);
-    if (window == NULL) {
+    if (window == nullptr) {
         std::cout << "Failed to create GLFW window" << std::endl;
         glfwTerminate();
         return -1;
     }
+
     glfwMakeContextCurrent(window);
     glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
 
@@ -122,7 +115,7 @@ int main() {
 
 
     // uncomment this call to draw in wireframe polygons.
-    //glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+    // glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 
     // render loop
     // -----------
