@@ -20,7 +20,7 @@ int main() {
 
     glfwSetErrorCallback(error_callback);
 
-    GLFWwindow *window = glfwCreateWindow(640, 480, "Bitches got me FUCKED UP", nullptr, nullptr);
+    GLFWwindow *window = glfwCreateWindow(640, 480, "e", nullptr, nullptr);
     glfwSetKeyCallback(window, key_callback);
 
     glfwMakeContextCurrent(window);
