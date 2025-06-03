@@ -11,6 +11,11 @@ static void key_callback(GLFWwindow *window, const int key, int scancode, int ac
         glfwSetWindowShouldClose(window, GLFW_TRUE);
 }
 
+void framebuffer_size_callback(GLFWwindow *window, int width, int height) {
+    glViewport(0, 0, width, height);
+}
+
+
 int main() {
     glfwInit();
 
@@ -20,23 +25,29 @@ int main() {
 
     glfwSetErrorCallback(error_callback);
 
-    GLFWwindow *window = glfwCreateWindow(640, 480, "e", nullptr, nullptr);
-    glfwSetKeyCallback(window, key_callback);
-
+    GLFWwindow *window = glfwCreateWindow(800, 600, "e", nullptr, nullptr);
     glfwMakeContextCurrent(window);
-    glfwSwapInterval(1);
 
-    while (!glfwWindowShouldClose(window)) {
-        int width;
-        int height;
+    glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
 
-        glfwGetFramebufferSize(window, &width, &height);
-        glViewport(0, 0, width, height);
-
-        glfwSwapBuffers(window);
+    if (!gladLoadGLLoader((GLADloadproc) glfwGetProcAddress)) {
+        std::cout << "Failed to initialize GLAD" << std::endl;
+        return -1;
     }
 
-    glfwDestroyWindow(window);
+    glfwSetKeyCallback(window, key_callback);
+
+    glfwSwapInterval(1);
+    glViewport(0, 0, 800, 600);
+
+    while (!glfwWindowShouldClose(window)) {
+        glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
+        glClear(GL_COLOR_BUFFER_BIT);
+
+        glfwSwapBuffers(window);
+        glfwPollEvents();
+    }
+
     glfwTerminate();
     return 0;
 }
