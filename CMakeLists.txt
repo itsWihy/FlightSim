@@ -19,5 +19,11 @@ include_directories(/usr/local/include)
 link_directories(/usr/local/lib/glad)
 
 add_executable(FlightSimulatorHopefully src/main.cpp
-        include/FlightSimulatorHopefully/GLFWInitializer.h)
+        include/FlightSimulatorHopefully/ThirdPartyLibsInitializer.h
+        include/FlightSimulatorHopefully/Callbacks.h
+        src/rendering/RenderingUtilities.cpp
+        include/FlightSimulatorHopefully/rendering/RenderingUtilities.h
+        src/TestTriangle.h)
 target_link_libraries( FlightSimulatorHopefully ${OPENGL_LIBRARIES} glfw glad )
+
+#
