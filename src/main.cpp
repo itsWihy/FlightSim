@@ -74,14 +74,14 @@ int main() {
     return 0;
 }
 
-
-//plan:
-// get simple 1 block working
-// get camera working
-// get infinite grid working
-// add acceleration and deceleration
-// add rotating left and right
-// add going up and down
-// improve world, add mountains and stuff
+//TODO:
+// SHOW text on SCREEN! (fps, current speed, etc)
+// inifnite grid!
+// more sophisticated movement support
+// infinite terrain! add some blocks here and there!
+// add Pilot HUD like thing with current level and rotation and all!
+// add special joystick support
+// add shooting
 // add targets
-// add stick support
+// add a counter
+// ask someone who did yarpa b what the tasks are, and continue the proj!
