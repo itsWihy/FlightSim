@@ -22,6 +22,9 @@ add_executable(FlightSimulatorHopefully
         src/rendering/VBO.cpp
         src/rendering/VAO.cpp
         src/rendering/EBO.cpp
+        src/rendering/Camera.cpp
+        include/FlightSimulatorHopefully/Mesh.h
+        src/rendering/Mesh.cpp
 )
 
 

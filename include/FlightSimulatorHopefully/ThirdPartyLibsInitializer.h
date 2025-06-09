@@ -4,6 +4,7 @@
 
 #ifndef GLFWINITIALIZER_H
 #define GLFWINITIALIZER_H
+
 #include <GLFW/glfw3.h>
 
 inline void initializeGLFW() {

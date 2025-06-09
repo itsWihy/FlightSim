@@ -1,35 +1,31 @@
-#include <cmath>
-#include <glad/glad.h>
-#include <GLFW/glfw3.h>
-
-#include <iostream>
+#include "../include/FlightSimulatorHopefully/Mesh.h"
 
 #include "../include/FlightSimulatorHopefully/ThirdPartyLibsInitializer.h"
-#include "../include/FlightSimulatorHopefully/Callbacks.h"
-#include "../include/FlightSimulatorHopefully/rendering/EBO.h"
-#include "../include/FlightSimulatorHopefully/rendering/Shader.h"
-#include "../include/FlightSimulatorHopefully/rendering/VAO.h"
-#include "../include/FlightSimulatorHopefully/rendering/VBO.h"
 
+inline void resizingCallback(GLFWwindow *window, int width, int height) {
+    glViewport(0, 0, width, height);
+}
 
-const GLfloat vertices[] = {
-    //               COORDINATES                  /     COLORS           //
-    -0.5, -0.5, 0.0f,             1.0f, 0.0f, 0.0f,
-    -0.5f, 0.5, 0.0f,             0.0f, 1.0f, 0.0f,
-    0.5f, -0.5, 0.0f,             0.0f, 0.0f, 1.0f,
-    0.5f, 0.5, 0.0f,              1.0f, 1.0f, 1.0f,
+const std::vector<Vertex> &vertices{
+    {{-1.0f, -1.0f, 0.0f}, {1.0f, 0.0f, 1.0f}}, // bottom-left, red
+    {{-1.0f, 1.0f, 0.0f}, {0.0f, 1.0f, 1.0f}}, // top-left, green
+    {{1.0f, -1.0f, 0.0f}, {0.0f, 0.2f, 1.0f}}, // bottom-right, blue
+    {{1.0f, 1.0f, 0.0f}, {1.0f, 1.0f, 1.0f}}, // top-right, white
 };
 
-// Indices for vertices order
-const GLuint indices[] = {
+std::vector<GLuint> indices{
     0, 1, 2,
     3, 2, 1
 };
 
+
+const float width = 800;
+const float height = 800;
+
 int main() {
     initializeGLFW();
 
-    GLFWwindow *window = glfwCreateWindow(800, 600, "Flight simuutor", nullptr, nullptr);
+    GLFWwindow *window = glfwCreateWindow(width, height, "Flight simuutor", nullptr, nullptr);
     glfwMakeContextCurrent(window);
 
     gladLoadGL();
@@ -37,42 +33,38 @@ int main() {
 
     glfwSetFramebufferSizeCallback(window, resizingCallback);
 
-    const Shader shaderProgram(
+    Shader shaderProgram(
         "/home/Wihy/Projects/CPP/FlightSimulatorHopefully/resources/shaders/default.vert",
         "/home/Wihy/Projects/CPP/FlightSimulatorHopefully/resources/shaders/default.frag");
 
-    VAO VAO{};
-    VAO.bind();
 
-    VBO VBO(vertices, sizeof(vertices));
-    EBO EBO(indices, sizeof(indices));
+    glEnable(GL_DEPTH_TEST);
 
-    VAO.linkAttribute(VBO, 0, 3, GL_FLOAT, 6 * sizeof(float), (void *) nullptr);
-    VAO.linkAttribute(VBO, 1, 3, GL_FLOAT, 6 * sizeof(float), (void *) (3 * sizeof(float)));
+    Camera camera(width, height, glm::vec3(0.0f, 0.0f, 2.0f));
 
-    VAO.unbind();
-    VBO.unbind();
-    EBO.unbind();
+    std::vector<Mesh> cubes;
 
-    GLuint uniID = glGetUniformLocation(shaderProgram.ID, "scale");
+    for (int i = 0; i < 100; ++i) {
+        Mesh cube = {vertices, indices, {static_cast<float>(i % 3 - 1), -1.0f, -2.0f * static_cast<float>(i)}, {90, 0, 0}};
+        cubes.push_back(cube);
+    }
 
     while (!glfwWindowShouldClose(window)) {
         glClearColor(0.07f, 0.13f, 0.17f, 1.0f);
-        glClear(GL_COLOR_BUFFER_BIT);
+        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
         shaderProgram.activateShaders();
-        glUniform1f(uniID, 0.75);
-        VAO.bind();
 
-        glDrawElements(GL_TRIANGLES, 9, GL_UNSIGNED_INT, nullptr);
+        camera.inputs(window);
+
+        for (auto mesh: cubes) {
+            mesh.draw(shaderProgram, camera );
+        }
 
         glfwSwapBuffers(window);
         glfwPollEvents();
     }
 
-    VAO.deleteVAO();
-    VBO.deleteVBO();
-    EBO.deleteEBO();
 
     shaderProgram.deleteShaders();
 

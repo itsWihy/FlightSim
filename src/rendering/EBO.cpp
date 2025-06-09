@@ -4,13 +4,14 @@
 
 #include "../../include/FlightSimulatorHopefully/rendering/EBO.h"
 
+#include <vector>
 #include <glad/glad.h>
 
-EBO::EBO(const GLuint* indices, const GLsizeiptr size) {
+EBO::EBO(const std::vector<GLuint>& indices) {
     glGenBuffers(1, &ID);
 
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ID);
-    glBufferData(GL_ELEMENT_ARRAY_BUFFER, size, indices, GL_STATIC_DRAW);
+    glBufferData(GL_ELEMENT_ARRAY_BUFFER, std::ssize(indices) * sizeof(GLuint), indices.data(), GL_STATIC_DRAW);
 }
 
 void EBO::bind() const {
