@@ -44,9 +44,11 @@ int main() {
 
     std::vector<Mesh> cubes;
 
-    for (int i = 0; i < 100; ++i) {
-        Mesh cube = {vertices, indices, {static_cast<float>(i % 3 - 1), -1.0f, -2.0f * static_cast<float>(i)}, {90, 0, 0}};
-        cubes.push_back(cube);
+    for (int i = 0; i < 1000; ++i) {
+        float x = static_cast<float>(i % 3 - 1);
+        float z = -2.0f * static_cast<float>(i);
+
+        cubes.push_back({vertices, indices, {x, -3.0f, z}, {90, 0, 0}});
     }
 
     while (!glfwWindowShouldClose(window)) {
