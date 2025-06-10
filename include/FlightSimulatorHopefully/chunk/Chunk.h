@@ -11,8 +11,8 @@
 //World is divided into 8 by 8 chunks. Where (0,0) is 0,0, (1,1) is 8,8, and so on.
 
 class Chunk {
-    const glm::vec3 chunkPosition {};
     std::array<Mesh, 64> faces;
+    const glm::vec3 chunkPosition {};
 
 public:
     Chunk(const glm::vec3& chunkPosition, const std::vector<Vertex> &vertices, std::vector<GLuint> &indices);

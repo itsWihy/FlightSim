@@ -19,7 +19,7 @@ Chunk::Chunk(const glm::vec3 &chunkPosition, const std::vector<Vertex> &vertices
 }
 
 void Chunk::renderChunk(const Shader &shader, const Camera &camera) const {
-    for (auto face: faces) {
+    for (auto const& face: faces) {
         face.draw(shader, camera);
     }
 }
