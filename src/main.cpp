@@ -1,6 +1,7 @@
 #include "../include/FlightSimulatorHopefully/Mesh.h"
 
 #include "../include/FlightSimulatorHopefully/ThirdPartyLibsInitializer.h"
+#include "text/TextDisplay.h"
 
 inline void resizingCallback(GLFWwindow *window, int width, int height) {
     glViewport(0, 0, width, height);
@@ -14,7 +15,7 @@ const std::vector<Vertex> &vertices{
 };
 
 std::vector<GLuint> indices{
-    0, 1, 2,
+    2, 0, 1,
     3, 2, 1
 };
 
@@ -39,29 +40,43 @@ int main() {
 
 
     glEnable(GL_DEPTH_TEST);
+    glEnable(GL_CULL_FACE);
+    glCullFace(GL_FRONT);
+    glFrontFace(GL_CW);
+
+    glEnable(GL_BLEND);
+    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
     Camera camera(width, height, glm::vec3(0.0f, 0.0f, 2.0f));
+
+    Shader textShader (
+        "/home/Wihy/Projects/CPP/FlightSimulatorHopefully/resources/shaders/text.vert",
+        "/home/Wihy/Projects/CPP/FlightSimulatorHopefully/resources/shaders/text.frag");
+    TextDisplay textDisplay(textShader);
 
     std::vector<Mesh> cubes;
 
     for (int i = 0; i < 1000; ++i) {
-        float x = static_cast<float>(i % 3 - 1);
-        float z = -2.0f * static_cast<float>(i);
+        auto x = static_cast<float>(i % 3 - 1);
+        auto z = -2.0f * static_cast<float>(i);
 
         cubes.push_back({vertices, indices, {x, -3.0f, z}, {90, 0, 0}});
     }
 
     while (!glfwWindowShouldClose(window)) {
-        glClearColor(0.07f, 0.13f, 0.17f, 1.0f);
+        glClearColor(0.52f, 0.807f, 0.95f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
         shaderProgram.activateShaders();
 
         camera.inputs(window);
 
-        for (auto mesh: cubes) {
-            mesh.draw(shaderProgram, camera );
-        }
+        // for (auto mesh: cubes) {
+        //     mesh.draw(shaderProgram, camera );
+        // }
+
+        textDisplay.RenderText( "This is sample text", 25.0f, 25.0f, 1.0f, glm::vec3(1, 1 , 1));
+        textDisplay.RenderText("(C) LearnOpenGL.com", 540.0f, 570.0f, 0.5f, glm::vec3(0.3, 0.7f, 0.9f));
 
         glfwSwapBuffers(window);
         glfwPollEvents();

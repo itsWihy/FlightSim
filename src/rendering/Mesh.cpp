@@ -38,6 +38,6 @@ void Mesh::draw(Shader &shader, Camera &camera) {
 
     glUniformMatrix4fv(glGetUniformLocation(shader.ID, "modelMatrix"), 1, GL_FALSE, glm::value_ptr(model));
 
-    camera.updateCameraMatrix(70.0f, 0.1f, 100.0f, shader);
+    camera.updateCameraMatrix(70.0f, 0.1f, 1000.0f, shader);
     glDrawElements(GL_TRIANGLES, indices.size(), GL_UNSIGNED_INT, nullptr);
 }
