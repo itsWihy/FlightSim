@@ -21,8 +21,8 @@ std::vector<GLuint> indices{
 };
 
 
-const float width = 800;
-const float height = 800;
+constexpr float width = 800;
+constexpr float height = 800;
 
 int main() {
     initializeGLFW();
