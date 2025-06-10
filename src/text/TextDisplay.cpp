@@ -5,13 +5,18 @@
 
 
 #include <iostream>
+#include <glm/ext/matrix_clip_space.hpp>
+#include <glm/ext/matrix_float4x4.hpp>
+#include <glm/gtc/type_ptr.hpp>
 
 TextDisplay::TextDisplay(Shader& shader) : shader( shader ), VBO1({}) {
+    glm::mat4 projection = glm::ortho(0.0f, static_cast<float>(800), 0.0f, static_cast<float>(800));
+    shader.activateShaders();
+    glUniformMatrix4fv(glGetUniformLocation(shader.ID, "projection"), 1, GL_FALSE, glm::value_ptr(projection));
+
     VAO1.bind();
 
-    VBO1.bind();
-    glBufferData(GL_ARRAY_BUFFER, sizeof(float) * 6 * 4, nullptr, GL_DYNAMIC_DRAW); //custom for VBO class, might be problematic.
-
+    glBufferData(GL_ARRAY_BUFFER, sizeof(float) * 6 * 4, nullptr, GL_DYNAMIC_DRAW);
     VAO1.linkAttribute(VBO1, 0, 4, GL_FLOAT, 4 * sizeof(float), 0);
 
     VAO1.unbind();
@@ -22,7 +27,7 @@ TextDisplay::TextDisplay(Shader& shader) : shader( shader ), VBO1({}) {
     }
 
     FT_Face face;
-    if (FT_New_Face(ft, "/usr/share/fonts/TTF/RobotoMono-Regular.ttf", 0, &face)) {
+    if (FT_New_Face(ft, "/home/Wihy/Projects/CPP/FlightSimulatorHopefully/resources/fonts/Antonio-Bold.ttf", 0, &face)) {
         std::cout << "ERROR::FREETYPE: Failed to load font" << std::endl;
     }
 

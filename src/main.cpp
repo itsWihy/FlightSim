@@ -49,9 +49,10 @@ int main() {
 
     Camera camera(width, height, glm::vec3(0.0f, 0.0f, 2.0f));
 
-    Shader textShader (
+    Shader textShader(
         "/home/Wihy/Projects/CPP/FlightSimulatorHopefully/resources/shaders/text.vert",
         "/home/Wihy/Projects/CPP/FlightSimulatorHopefully/resources/shaders/text.frag");
+
     TextDisplay textDisplay(textShader);
 
     std::vector<Mesh> cubes;
@@ -71,12 +72,12 @@ int main() {
 
         camera.inputs(window);
 
-        // for (auto mesh: cubes) {
-        //     mesh.draw(shaderProgram, camera );
-        // }
+        for (auto mesh: cubes) {
+            mesh.draw(shaderProgram, camera );
+        }
 
-        textDisplay.RenderText( "This is sample text", 25.0f, 25.0f, 1.0f, glm::vec3(1, 1 , 1));
-        textDisplay.RenderText("(C) LearnOpenGL.com", 540.0f, 570.0f, 0.5f, glm::vec3(0.3, 0.7f, 0.9f));
+
+        textDisplay.RenderText("Speed: " + std::to_string(camera.speed), 25.0f, 25.0f, 0.5f, glm::vec3(1, 1, 1));
 
         glfwSwapBuffers(window);
         glfwPollEvents();
