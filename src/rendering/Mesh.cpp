@@ -1,11 +1,10 @@
 #include "../../include/FlightSimulatorHopefully/Mesh.h"
 
-Mesh::Mesh(const std::vector<Vertex> &vertices, std::vector<GLuint> &indices, glm::vec3 position, glm::vec3 rotation) {
-    Mesh::vertices = vertices;
-    Mesh::indices = indices;
-    Mesh::position = position;
-    Mesh::rotation = rotation;
+Mesh::Mesh() : position({}), rotation({}), vertices({}), indices({}) {
+}
 
+Mesh::Mesh(const std::vector<Vertex> &vertices, std::vector<GLuint> &indices, glm::vec3 position, glm::vec3 rotation)
+    : position(position), rotation(rotation), vertices(vertices), indices(indices) {
     VAO1.bind();
 
     VBO VBO(vertices);
@@ -17,10 +16,9 @@ Mesh::Mesh(const std::vector<Vertex> &vertices, std::vector<GLuint> &indices, gl
     VAO1.unbind();
     VBO.unbind();
     EBO.unbind();
-
 }
 
-void Mesh::draw(Shader &shader, Camera &camera) {
+void Mesh::draw(const Shader &shader, const Camera &camera) const {
     shader.activateShaders();
     VAO1.bind();
 
@@ -28,13 +26,13 @@ void Mesh::draw(Shader &shader, Camera &camera) {
     glm::mat4 model = glm::translate(glm::mat4(1.0f), position);
 
     if (rotation.x != 0)
-        model = glm::rotate(model, glm::radians(rotation.x), {1,0,0});
+        model = glm::rotate(model, glm::radians(rotation.x), {1, 0, 0});
 
     if (rotation.y != 0)
-        model = glm::rotate(model, glm::radians(rotation.y), {0,1,0});
+        model = glm::rotate(model, glm::radians(rotation.y), {0, 1, 0});
 
     if (rotation.z != 0)
-        model = glm::rotate(model, glm::radians(rotation.z), {0,0,1});
+        model = glm::rotate(model, glm::radians(rotation.z), {0, 0, 1});
 
     glUniformMatrix4fv(glGetUniformLocation(shader.ID, "modelMatrix"), 1, GL_FALSE, glm::value_ptr(model));
 

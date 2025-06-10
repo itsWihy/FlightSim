@@ -1,7 +1,8 @@
 #include "../include/FlightSimulatorHopefully/Mesh.h"
 
 #include "../include/FlightSimulatorHopefully/ThirdPartyLibsInitializer.h"
-#include "text/TextDisplay.h"
+#include "../include/FlightSimulatorHopefully/chunk/Chunk.h"
+#include "../include/FlightSimulatorHopefully/text/TextDisplay.h"
 
 inline void resizingCallback(GLFWwindow *window, int width, int height) {
     glViewport(0, 0, width, height);
@@ -57,12 +58,8 @@ int main() {
 
     std::vector<Mesh> cubes;
 
-    for (int i = 0; i < 1000; ++i) {
-        auto x = static_cast<float>(i % 3 - 1);
-        auto z = -2.0f * static_cast<float>(i);
-
-        cubes.push_back({vertices, indices, {x, -3.0f, z}, {90, 0, 0}});
-    }
+    //Idea: Chunk, composed of many cubes. Then, generate chunks around player. As he moves, generate more chunks.
+    const Chunk chunk {{0,0,0}, vertices, indices};
 
     while (!glfwWindowShouldClose(window)) {
         glClearColor(0.52f, 0.807f, 0.95f, 1.0f);
@@ -72,17 +69,14 @@ int main() {
 
         camera.inputs(window);
 
-        for (auto mesh: cubes) {
-            mesh.draw(shaderProgram, camera );
-        }
+        chunk.renderChunk(shaderProgram, camera);
 
-
-        textDisplay.RenderText("Speed: " + std::to_string(camera.speed), 25.0f, 25.0f, 0.5f, glm::vec3(1, 1, 1));
+        textDisplay.renderText("Position: " + std::to_string(camera.Position.z ), 175.0f, 25.0f, 0.5f, glm::vec3(1,1,1));
+        textDisplay.renderText("Speed: " + std::to_string(camera.speed), 25.0f, 25.0f, 0.5f, glm::vec3(1, 1, 1));
 
         glfwSwapBuffers(window);
         glfwPollEvents();
     }
-
 
     shaderProgram.deleteShaders();
 

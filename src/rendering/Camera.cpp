@@ -14,14 +14,18 @@ void Camera::updateCameraMatrix(float FOVdegrees, float nearPlane, float farPlan
 }
 
 void Camera::inputs(GLFWwindow *window) {
-    speed += acceleration;
     Position += speed * Orientation;
+    speed += acceleration;
 
     if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS) {
-        acceleration = 0.01f;
+        speed = 0.1f;
     }
 
     if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS) {
-        acceleration = -0.01f;
+        speed = -0.1f;
+    }
+
+    if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS) {
+        speed = 0;
     }
 }

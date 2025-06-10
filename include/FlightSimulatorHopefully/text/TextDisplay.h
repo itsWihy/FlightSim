@@ -9,8 +9,8 @@
 #include <glm/vec2.hpp>
 #include <glm/vec3.hpp>
 #include <freetype2/freetype/freetype.h>
-#include "../../include/FlightSimulatorHopefully/rendering/Shader.h"
-#include "../../include/FlightSimulatorHopefully/rendering/VAO.h"
+#include "../rendering/Shader.h"
+#include "../rendering/VAO.h"
 
 
 struct Character {
@@ -32,7 +32,7 @@ public:
 
     explicit TextDisplay(Shader& shader);
 
-    void RenderText(std::string text, float x, float y, float scale, glm::vec3 color);
+    void renderText(std::string text, float x, float y, float scale, glm::vec3 color);
 };
 
 

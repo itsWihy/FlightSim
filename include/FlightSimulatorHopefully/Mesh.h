@@ -19,9 +19,10 @@ public:
     std::vector<GLuint> indices;
     VAO VAO1;
 
+    Mesh();
     Mesh(const std::vector<Vertex> &vertices, std::vector<GLuint> &indices, glm::vec3 position={}, glm::vec3 rotation={});
 
-    void draw(Shader &shader, Camera &camera);
+    void draw(const Shader &shader, const Camera &camera) const;
 };
 
 #endif //MESH_H

@@ -1,12 +1,10 @@
 //
 // Created by Wihy on 6/10/25.
 //
-#include "TextDisplay.h"
+#include "../../include/FlightSimulatorHopefully/text/TextDisplay.h"
 
 
 #include <iostream>
-#include <glm/ext/matrix_clip_space.hpp>
-#include <glm/ext/matrix_float4x4.hpp>
 #include <glm/gtc/type_ptr.hpp>
 
 TextDisplay::TextDisplay(Shader& shader) : shader( shader ), VBO1({}) {
@@ -84,7 +82,7 @@ TextDisplay::TextDisplay(Shader& shader) : shader( shader ), VBO1({}) {
 }
 
 
-void TextDisplay::RenderText(std::string text, float x, float y, float scale, glm::vec3 color) {
+void TextDisplay::renderText(std::string text, float x, float y, float scale, glm::vec3 color) {
     // activate corresponding render state
     shader.activateShaders();
 
@@ -94,8 +92,7 @@ void TextDisplay::RenderText(std::string text, float x, float y, float scale, gl
     VAO1.bind();
 
     // iterate through all characters
-    std::string::const_iterator c;
-    for (c = text.begin(); c != text.end(); c++) {
+    for (std::string::const_iterator c = text.begin(); c != text.end(); ++c) {
         Character ch = Characters[*c];
 
         float xpos = x + ch.Bearing.x * scale;

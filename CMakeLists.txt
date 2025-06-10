@@ -25,6 +25,8 @@ add_executable(FlightSimulatorHopefully
         include/FlightSimulatorHopefully/Mesh.h
         src/rendering/Mesh.cpp
         src/text/TextDisplay.cpp
+        src/chunks/Chunk.cpp
+        src/chunks/ChunkManager.cpp
 )
 
 target_include_directories(FlightSimulatorHopefully PRIVATE /usr/local/include /usr/include/freetype2)
