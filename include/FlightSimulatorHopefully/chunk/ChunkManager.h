@@ -4,6 +4,10 @@
 
 #ifndef CHUNKMANAGER_H
 #define CHUNKMANAGER_H
+#include <map>
+
+#include "Chunk.h"
+#include "../Camera.h"
 
 
 // has list of chunks. vector.
@@ -18,7 +22,15 @@
 //public:
 // has a renderNearChunks function
 class ChunkManager {
+    const std::vector<Vertex> &vertices;
+    const std::vector<GLuint> &indices;
 
+    std::vector<Chunk> currentChunks;
+
+public:
+    ChunkManager(const std::vector<Vertex>& vertices, const std::vector<GLuint>& indices);
+
+    void renderNearChunks(Shader &shader, Camera &camera);
 };
 
 #endif //CHUNKMANAGER_H

@@ -1,12 +1,10 @@
 #include "../../include/FlightSimulatorHopefully/Camera.h"
 
-Camera::Camera(const int width, const int height, const glm::vec3 position) {
-    Camera::width = width;
-    Camera::height = height;
-    Position = position;
+Camera::Camera(const int width, const int height, const glm::vec3 position, const float FOVdegrees, const float nearPlane, const float farPlane)
+    : Position(position), width(width), height(height), FOVdegrees(FOVdegrees), nearPlane(nearPlane), farPlane(farPlane) {
 }
 
-void Camera::updateCameraMatrix(float FOVdegrees, float nearPlane, float farPlane, const Shader &shader) const {
+void Camera::updateCameraMatrix(const Shader &shader) const {
     const auto view = glm::lookAt(Position, Position + Orientation, Up);
     const auto projection = glm::perspective(glm::radians(FOVdegrees), static_cast<float>(width / height), nearPlane, farPlane);
 

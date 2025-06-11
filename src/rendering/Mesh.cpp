@@ -3,7 +3,7 @@
 Mesh::Mesh() : position({}), rotation({}), vertices({}), indices({}) {
 }
 
-Mesh::Mesh(const std::vector<Vertex> &vertices, std::vector<GLuint> &indices, glm::vec3 position, glm::vec3 rotation)
+Mesh::Mesh(const std::vector<Vertex> &vertices, const std::vector<GLuint> &indices, glm::vec3 position, glm::vec3 rotation)
     : position(position), rotation(rotation), vertices(vertices), indices(indices) {
     VAO1.bind();
 
@@ -36,6 +36,6 @@ void Mesh::draw(const Shader &shader, const Camera &camera) const {
 
     glUniformMatrix4fv(glGetUniformLocation(shader.ID, "modelMatrix"), 1, GL_FALSE, glm::value_ptr(model));
 
-    camera.updateCameraMatrix(70.0f, 0.1f, 1000.0f, shader);
+    camera.updateCameraMatrix(shadzer);
     glDrawElements(GL_TRIANGLES, indices.size(), GL_UNSIGNED_INT, nullptr);
 }

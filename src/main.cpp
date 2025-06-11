@@ -1,7 +1,10 @@
+#include <ranges>
+
 #include "../include/FlightSimulatorHopefully/Mesh.h"
 
 #include "../include/FlightSimulatorHopefully/ThirdPartyLibsInitializer.h"
 #include "../include/FlightSimulatorHopefully/chunk/Chunk.h"
+#include "../include/FlightSimulatorHopefully/chunk/ChunkManager.h"
 #include "../include/FlightSimulatorHopefully/text/TextDisplay.h"
 
 inline void resizingCallback(GLFWwindow *window, int width, int height) {
@@ -48,7 +51,7 @@ int main() {
     glEnable(GL_BLEND);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
-    Camera camera(width, height, glm::vec3(0.0f, 0.0f, 2.0f));
+    Camera camera(width, height, glm::vec3(0.0f, 0.0f, 2.0f), 70.0f, 0.1f, 100.0f);
 
     Shader textShader(
         "/home/Wihy/Projects/CPP/FlightSimulatorHopefully/resources/shaders/text.vert",
@@ -56,12 +59,25 @@ int main() {
 
     TextDisplay textDisplay(textShader);
 
-    std::vector<Mesh> cubes;
+    ChunkManager chunkManager {vertices, indices};
 
-    //Idea: Chunk, composed of many cubes. Then, generate chunks around player. As he moves, generate more chunks.
-    const Chunk chunk {{0,0,0}, vertices, indices};
+    double prevTime = 0.0;
+    double currentTIme = 0.0;
+    double timeDiff;
+
+    int fps = 0;
+
+    std::string FPS;
 
     while (!glfwWindowShouldClose(window)) {
+        currentTIme = glfwGetTime();
+        timeDiff = currentTIme - prevTime;
+        fps++;
+
+        if (timeDiff >= 1.0 / 30.0) {
+            FPS = std::to_string((1.0 / timeDiff) * fps);
+        }
+
         glClearColor(0.52f, 0.807f, 0.95f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
@@ -69,10 +85,12 @@ int main() {
 
         camera.inputs(window);
 
-        chunk.renderChunk(shaderProgram, camera);
+        chunkManager.renderNearChunks(shaderProgram, camera);
 
-        textDisplay.renderText("Position: " + std::to_string(camera.Position.z ), 175.0f, 25.0f, 0.5f, glm::vec3(1,1,1));
+        textDisplay.renderText("Position: " + std::to_string(camera.Position.z), 175.0f, 25.0f, 0.5f,
+                               glm::vec3(1, 1, 1));
         textDisplay.renderText("Speed: " + std::to_string(camera.speed), 25.0f, 25.0f, 0.5f, glm::vec3(1, 1, 1));
+        textDisplay.renderText("FPS: " + FPS, 25.0f, 500.0f, 0.5f, glm::vec3(1, 1, 1));
 
         glfwSwapBuffers(window);
         glfwPollEvents();
@@ -84,8 +102,10 @@ int main() {
     return 0;
 }
 
+
+
 //TODO:
-// SHOW text on SCREEN! (fps, current speed, etc)
+// FIX HORRIBLE PERFORMANCe! YOU SHOULD ONLY HAVE __ONE__ VBO VAO AND EBO!!! NOT HUNDREDS! LEARN More ABOut them and FIX IT!
 // inifnite grid!
 // more sophisticated movement support
 // infinite terrain! add some blocks here and there!

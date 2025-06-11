@@ -20,7 +20,7 @@ public:
     VAO VAO1;
 
     Mesh();
-    Mesh(const std::vector<Vertex> &vertices, std::vector<GLuint> &indices, glm::vec3 position={}, glm::vec3 rotation={});
+    Mesh(const std::vector<Vertex> &vertices, const std::vector<GLuint> &indices, glm::vec3 position={}, glm::vec3 rotation={});
 
     void draw(const Shader &shader, const Camera &camera) const;
 };

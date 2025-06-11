@@ -9,19 +9,25 @@
 class Camera {
 public:
     glm::vec3 Position{};
-    glm::vec3 Orientation = glm::vec3(0.0f, 0.0f, -1.0f);
+    glm::vec3 Orientation = glm::vec3(0.0f, 0.0f, 1.0f);
     glm::vec3 Up = glm::vec3(0.0f, 1.0f, 0.0f);
 
     int width;
     int height;
 
+    float FOVdegrees;
+    float nearPlane;
+    float farPlane;
+
     float speed = 0.0f;
     float acceleration = 0.0f;
 
-    Camera(int width, int height, glm::vec3 position);
+    Camera(int width, int height, glm::vec3 position, float FOVdegrees, float nearPlane, float farPlane);
 
-    void updateCameraMatrix(float FOVdegrees, float nearPlane, float farPlane, const Shader& shader) const;
+    void updateCameraMatrix(const Shader& shader) const;
     void inputs(GLFWwindow* window);
+
+
 };
 
 #endif //CAMERA_H
