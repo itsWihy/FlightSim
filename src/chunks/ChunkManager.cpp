@@ -8,8 +8,8 @@
 
 #include "../../include/FlightSimulatorHopefully/chunk/ChunkManager.h"
 
-ChunkManager::ChunkManager(const std::vector<Vertex> &vertices, const std::vector<GLuint> &indices)
-    : vertices(vertices), indices(indices) {
+ChunkManager::ChunkManager(const Mesh& chunkMesh)
+    : chunkMesh(chunkMesh) {
 }
 
 
@@ -25,7 +25,7 @@ void ChunkManager::renderNearChunks(Shader &shader, Camera &camera) {
     glm::vec2 pointBInChunkCoords = {(camera.Position.x + longDistance / 2) / 8, zValueInChunkCoords};
 
     for (auto i = static_cast<int>(pointAInChunkCoords.x); i < static_cast<int>(pointBInChunkCoords.x); i++) {
-        currentChunks.push_back({{i, 1 + cameraZInChunkCoords}, vertices, indices});
+        currentChunks.push_back({{i, 1 + cameraZInChunkCoords}, chunkMesh});
     }
 
     for (auto const &chunk: currentChunks) {

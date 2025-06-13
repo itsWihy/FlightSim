@@ -12,11 +12,15 @@
 
 class Chunk {
 private:
-    std::array<Mesh, 64> faces;
+    std::array<glm::vec3, 64> facePositions;
+
+    const Mesh& chunkMesh;
+    const glm::vec3 rotation = {90, 0, 0};
+
     const glm::vec2 chunkPosition {};
 
 public:
-    Chunk(const glm::vec2& chunkPosition, const std::vector<Vertex> &vertices, const std::vector<GLuint> &indices);
+    Chunk(const glm::vec2& chunkPosition, const Mesh& chunkMesh);
 
     void renderChunk(const Shader& shader, const Camera& camera) const;
 };

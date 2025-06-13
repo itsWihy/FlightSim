@@ -12,17 +12,15 @@
 
 class Mesh {
 public:
-    glm::vec3 position {};
-    glm::vec3 rotation {};
-
     std::vector<Vertex> vertices;
     std::vector<GLuint> indices;
+
     VAO VAO1;
 
     Mesh();
-    Mesh(const std::vector<Vertex> &vertices, const std::vector<GLuint> &indices, glm::vec3 position={}, glm::vec3 rotation={});
+    Mesh(const std::vector<Vertex> &vertices, const std::vector<GLuint> &indices);
 
-    void draw(const Shader &shader, const Camera &camera) const;
+    void draw(const Shader &shader, const Camera &camera, const glm::vec3& position, const glm::vec3& rotation ) const;
 };
 
 #endif //MESH_H

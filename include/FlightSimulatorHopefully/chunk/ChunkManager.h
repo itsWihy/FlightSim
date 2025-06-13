@@ -22,13 +22,11 @@
 //public:
 // has a renderNearChunks function
 class ChunkManager {
-    const std::vector<Vertex> &vertices;
-    const std::vector<GLuint> &indices;
-
+    const Mesh& chunkMesh;
     std::vector<Chunk> currentChunks;
 
 public:
-    ChunkManager(const std::vector<Vertex>& vertices, const std::vector<GLuint>& indices);
+    ChunkManager(const Mesh& chunkMesh);
 
     void renderNearChunks(Shader &shader, Camera &camera);
 };

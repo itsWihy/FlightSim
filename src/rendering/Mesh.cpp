@@ -1,14 +1,14 @@
 #include "../../include/FlightSimulatorHopefully/Mesh.h"
 
-Mesh::Mesh() : position({}), rotation({}), vertices({}), indices({}) {
+Mesh::Mesh() : vertices({}), indices({}) {
 }
 
-Mesh::Mesh(const std::vector<Vertex> &vertices, const std::vector<GLuint> &indices, glm::vec3 position, glm::vec3 rotation)
-    : position(position), rotation(rotation), vertices(vertices), indices(indices) {
+Mesh::Mesh(const std::vector<Vertex> &vertices, const std::vector<GLuint> &indices)
+    : vertices(vertices), indices(indices) {
     VAO1.bind();
 
-    VBO VBO(vertices);
-    EBO EBO(indices);
+    const VBO VBO(vertices);
+    const EBO EBO(indices);
 
     VAO1.linkAttribute(VBO, 0, 3, GL_FLOAT, sizeof(Vertex), (void *) 0);
     VAO1.linkAttribute(VBO, 1, 3, GL_FLOAT, sizeof(Vertex), (void *) (3 * sizeof(float)));
@@ -18,7 +18,7 @@ Mesh::Mesh(const std::vector<Vertex> &vertices, const std::vector<GLuint> &indic
     EBO.unbind();
 }
 
-void Mesh::draw(const Shader &shader, const Camera &camera) const {
+void Mesh::draw(const Shader &shader, const Camera &camera, const glm::vec3& position, const glm::vec3& rotation ) const {
     shader.activateShaders();
     VAO1.bind();
 
@@ -36,6 +36,6 @@ void Mesh::draw(const Shader &shader, const Camera &camera) const {
 
     glUniformMatrix4fv(glGetUniformLocation(shader.ID, "modelMatrix"), 1, GL_FALSE, glm::value_ptr(model));
 
-    camera.updateCameraMatrix(shadzer);
+    camera.updateCameraMatrix(shader);
     glDrawElements(GL_TRIANGLES, indices.size(), GL_UNSIGNED_INT, nullptr);
 }

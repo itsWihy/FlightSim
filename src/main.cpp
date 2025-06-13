@@ -59,7 +59,9 @@ int main() {
 
     TextDisplay textDisplay(textShader);
 
-    ChunkManager chunkManager {vertices, indices};
+    const Mesh chunksesMesh {vertices, indices};
+
+    ChunkManager chunkManager {chunksesMesh};
 
     double prevTime = 0.0;
     double currentTIme = 0.0;
