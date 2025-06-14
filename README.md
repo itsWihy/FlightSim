@@ -6,4 +6,5 @@ Project to learn both CPP & flying Ig
 Would hopefully look like this at the end
 
 Current look:
-![image](https://github.com/user-attachments/assets/76c02ca5-cef9-4f23-a67c-bc54ac064afb)
+![image](https://github.com/user-attachments/assets/4f0b78e2-50af-4e7a-b055-55a07fbc2dd4)
+
