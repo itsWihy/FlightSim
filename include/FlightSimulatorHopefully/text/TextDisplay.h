@@ -23,14 +23,14 @@ struct Character {
 
 class TextDisplay {
 public:
-    Shader& shader;
+    const Shader& shader;
 
     VAO VAO1;
     VBO VBO1;
 
     std::map<char, Character> Characters;
 
-    explicit TextDisplay(Shader& shader);
+    explicit TextDisplay(const Shader& shader);
 
     void renderText(std::string text, float x, float y, float scale, glm::vec3 color);
 };

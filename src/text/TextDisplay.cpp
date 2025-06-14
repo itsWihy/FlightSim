@@ -7,7 +7,7 @@
 #include <iostream>
 #include <glm/gtc/type_ptr.hpp>
 
-TextDisplay::TextDisplay(Shader& shader) : shader( shader ), VBO1({}) {
+TextDisplay::TextDisplay(const Shader& shader) : shader( shader ), VBO1({}) {
     glm::mat4 projection = glm::ortho(0.0f, static_cast<float>(800), 0.0f, static_cast<float>(800));
     shader.activateShaders();
     glUniformMatrix4fv(glGetUniformLocation(shader.ID, "projection"), 1, GL_FALSE, glm::value_ptr(projection));
@@ -92,23 +92,23 @@ void TextDisplay::renderText(std::string text, float x, float y, float scale, gl
     VAO1.bind();
 
     // iterate through all characters
-    for (std::string::const_iterator c = text.begin(); c != text.end(); ++c) {
-        Character ch = Characters[*c];
+    for (char c : text) {
+        Character ch = Characters[c];
 
-        float xpos = x + ch.Bearing.x * scale;
-        float ypos = y - (ch.Size.y - ch.Bearing.y) * scale;
+        const float xPos = x + ch.Bearing.x * scale;
+        const float yPos = y - (ch.Size.y - ch.Bearing.y) * scale;
 
         float w = ch.Size.x * scale;
         float h = ch.Size.y * scale;
         // update VBO for each character
         float vertices[6][4] = {
-            {xpos, ypos + h, 0.0f, 0.0f},
-            {xpos, ypos, 0.0f, 1.0f},
-            {xpos + w, ypos, 1.0f, 1.0f},
+            {xPos, yPos + h, 0.0f, 0.0f},
+            {xPos, yPos, 0.0f, 1.0f},
+            {xPos + w, yPos, 1.0f, 1.0f},
 
-            {xpos, ypos + h, 0.0f, 0.0f},
-            {xpos + w, ypos, 1.0f, 1.0f},
-            {xpos + w, ypos + h, 1.0f, 0.0f}
+            {xPos, yPos + h, 0.0f, 0.0f},
+            {xPos + w, yPos, 1.0f, 1.0f},
+            {xPos + w, yPos + h, 1.0f, 0.0f}
         };
 
         // render glyph texture over quad

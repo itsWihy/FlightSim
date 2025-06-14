@@ -12,7 +12,7 @@ inline void resizingCallback(GLFWwindow *window, int width, int height) {
 }
 
 const std::vector<Vertex> &vertices{
-    {{-1.0f, -1.0f, 0.0f}, {1.0f, 0.0f, 1.0f}}, // bottom-left, red
+    {{-1.0f, -1.0f, 0.0f}, {0.0f, 0.0f, 1.0f}}, // bottom-left, red
     {{-1.0f, 1.0f, 0.0f}, {0.0f, 1.0f, 1.0f}}, // top-left, green
     {{1.0f, -1.0f, 0.0f}, {0.0f, 0.2f, 1.0f}}, // bottom-right, blue
     {{1.0f, 1.0f, 0.0f}, {1.0f, 1.0f, 1.0f}}, // top-right, white
@@ -43,17 +43,17 @@ int main() {
         "/home/Wihy/Projects/CPP/FlightSimulatorHopefully/resources/shaders/default.frag");
 
 
-    glEnable(GL_DEPTH_TEST);
-    glEnable(GL_CULL_FACE);
-    glCullFace(GL_FRONT);
     glFrontFace(GL_CW);
+    glCullFace(GL_FRONT);
+    glEnable(GL_CULL_FACE);
+    glEnable(GL_DEPTH_TEST);
 
     glEnable(GL_BLEND);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
-    Camera camera(width, height, glm::vec3(0.0f, 0.0f, 2.0f), 70.0f, 0.1f, 100.0f);
+    Camera camera(width, height, glm::vec3(0.0f, 0.0f, 2.0f), 90.0f, 0.1f, 100.0f);
 
-    Shader textShader(
+    const Shader textShader(
         "/home/Wihy/Projects/CPP/FlightSimulatorHopefully/resources/shaders/text.vert",
         "/home/Wihy/Projects/CPP/FlightSimulatorHopefully/resources/shaders/text.frag");
 
@@ -63,21 +63,21 @@ int main() {
 
     ChunkManager chunkManager {chunksesMesh};
 
-    double prevTime = 0.0;
-    double currentTIme = 0.0;
-    double timeDiff;
+    double lastTime = glfwGetTime();
+    int nbFrames = 0;
 
-    int fps = 0;
-
-    std::string FPS;
+    double fps = 0;
 
     while (!glfwWindowShouldClose(window)) {
-        currentTIme = glfwGetTime();
-        timeDiff = currentTIme - prevTime;
-        fps++;
+        double currentTime = glfwGetTime();
+        double delta = currentTime - lastTime;
 
-        if (timeDiff >= 1.0 / 30.0) {
-            FPS = std::to_string((1.0 / timeDiff) * fps);
+        nbFrames++;
+        if ( delta >= 1.0 ){
+            fps = static_cast<double>(nbFrames) / delta;
+
+            nbFrames = 0;
+            lastTime = currentTime;
         }
 
         glClearColor(0.52f, 0.807f, 0.95f, 1.0f);
@@ -92,7 +92,9 @@ int main() {
         textDisplay.renderText("Position: " + std::to_string(camera.Position.z), 175.0f, 25.0f, 0.5f,
                                glm::vec3(1, 1, 1));
         textDisplay.renderText("Speed: " + std::to_string(camera.speed), 25.0f, 25.0f, 0.5f, glm::vec3(1, 1, 1));
-        textDisplay.renderText("FPS: " + FPS, 25.0f, 500.0f, 0.5f, glm::vec3(1, 1, 1));
+
+        textDisplay.renderText("FPS: " + std::to_string(fps), 25.0f, 500.0f, 0.5f, glm::vec3(1, 1, 1));
+
 
         glfwSwapBuffers(window);
         glfwPollEvents();

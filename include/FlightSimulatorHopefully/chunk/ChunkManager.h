@@ -28,7 +28,7 @@ class ChunkManager {
 public:
     ChunkManager(const Mesh& chunkMesh);
 
-    void renderNearChunks(Shader &shader, Camera &camera);
+    void renderNearChunks(const Shader &shader, const Camera &camera);
 };
 
 #endif //CHUNKMANAGER_H

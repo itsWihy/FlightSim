@@ -8,29 +8,39 @@
 
 #include "../../include/FlightSimulatorHopefully/chunk/ChunkManager.h"
 
+#include <numeric>
+
 ChunkManager::ChunkManager(const Mesh& chunkMesh)
     : chunkMesh(chunkMesh) {
 }
 
 
-void ChunkManager::renderNearChunks(Shader &shader, Camera &camera) {
+void ChunkManager::renderNearChunks(const Shader &shader, const Camera &camera) {
+    constexpr int CHUNK_SIZE = 8;
+
     //The distance apart from both farthest points from one another
-    int cameraZInChunkCoords = static_cast<int>(camera.Position.z) / 8;
+    const int cameraZInChunkCoords = static_cast<int>(camera.Position.z) / CHUNK_SIZE;
+    const int cameraXInChunkCoords = static_cast<int>(camera.Position.x) / CHUNK_SIZE;
 
-    float longDistance = camera.farPlane * glm::tan(glm::radians(camera.FOVdegrees / 2));
+    const float tanRatio = glm::tan(glm::radians(camera.FOVdegrees / 2));
 
-    int zValueInChunkCoords = cameraZInChunkCoords + static_cast<int>(camera.farPlane) / 8;
+    for (int j = 0; j <= camera.farPlane / CHUNK_SIZE; ++j) {
+        const float baseDistanceInChunkCoords = j * tanRatio + 2;
 
-    glm::vec2 pointAInChunkCoords = {(camera.Position.x - longDistance / 2) / 8, zValueInChunkCoords};
-    glm::vec2 pointBInChunkCoords = {(camera.Position.x + longDistance / 2) / 8, zValueInChunkCoords};
+        const int baseZInChunkCoords = cameraZInChunkCoords + j / CHUNK_SIZE;
 
-    for (auto i = static_cast<int>(pointAInChunkCoords.x); i < static_cast<int>(pointBInChunkCoords.x); i++) {
-        currentChunks.push_back({{i, 1 + cameraZInChunkCoords}, chunkMesh});
+        const glm::vec2 pointAInChunkCoords = {(cameraXInChunkCoords - baseDistanceInChunkCoords ) / 2 , baseZInChunkCoords};
+        const glm::vec2 pointBInChunkCoords = {(cameraXInChunkCoords + baseDistanceInChunkCoords ) / 2 , baseZInChunkCoords};
+
+        for (auto i = static_cast<int>(pointAInChunkCoords.x); i < static_cast<int>(pointBInChunkCoords.x); i++) {
+            currentChunks.push_back({{i, j + cameraZInChunkCoords}, chunkMesh});
+        }
     }
 
-    for (auto const &chunk: currentChunks) {
+
+    for (const auto &chunk: currentChunks) {
         chunk.renderChunk(shader, camera);
     }
 
-    currentChunks.clear(); //todo: figure better w a y
+    currentChunks.clear();
 }
