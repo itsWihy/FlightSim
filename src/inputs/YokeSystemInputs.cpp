@@ -1,4 +1,4 @@
-#include "../include/FlightSimulatorHopefully/YokeSystemInputs.h"
+#include "../../include/FlightSimulatorHopefully/YokeSystemInputs.h"
 
 #include <cstring>
 #include <iostream>

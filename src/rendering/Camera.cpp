@@ -15,20 +15,8 @@ void Camera::inputs(GLFWwindow *window, const YokeSystem& yokeSystem) {
     Position += speed * Orientation;
     speed += acceleration;
 
-    // if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS) {
-    //     speed = 0.2f;
-    // }
-    //
-    // if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS) {
-    //     speed = -0.2f;
-    // }
-    //
-    // if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS) {
-    //     speed = 0;
-    // }
-
-    // acceleration += yokeSystem.getDataNormalized(AxisTypes::THRUST) / 100.0;
     Orientation.y += yokeSystem.getDataNormalized(AxisTypes::STEERING_PUSH_PULL) / 10.0;
+    Orientation.x -= yokeSystem.getDataNormalized(AxisTypes::STEERING_ROTATE) / 10.0;
 
     acceleration = yokeSystem.getDataNormalized(AxisTypes::WORKING_THRUST) / 100.0;
 }

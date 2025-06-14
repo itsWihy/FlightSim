@@ -15,7 +15,7 @@ TextDisplay::TextDisplay(const Shader& shader) : shader( shader ), VBO1({}) {
     VAO1.bind();
 
     glBufferData(GL_ARRAY_BUFFER, sizeof(float) * 6 * 4, nullptr, GL_DYNAMIC_DRAW);
-    VAO1.linkAttribute(VBO1, 0, 4, GL_FLOAT, 4 * sizeof(float), 0);
+    VAO1.linkAttribute(VBO1, 0, 4, GL_FLOAT, 4 * sizeof(float), nullptr);
 
     VAO1.unbind();
 
@@ -74,7 +74,7 @@ TextDisplay::TextDisplay(const Shader& shader) : shader( shader ), VBO1({}) {
             face->glyph->advance.x
         };
 
-        Characters.insert(std::pair<char, Character>(c, character));
+        Characters.try_emplace(c, character);
     }
 
     FT_Done_Face(face);
@@ -82,7 +82,7 @@ TextDisplay::TextDisplay(const Shader& shader) : shader( shader ), VBO1({}) {
 }
 
 
-void TextDisplay::renderText(std::string text, float x, float y, float scale, glm::vec3 color) {
+void TextDisplay::renderText(const std::string &text, float x, float y, float scale, glm::vec3 color) {
     // activate corresponding render state
     shader.activateShaders();
 
@@ -98,8 +98,8 @@ void TextDisplay::renderText(std::string text, float x, float y, float scale, gl
         const float xPos = x + ch.Bearing.x * scale;
         const float yPos = y - (ch.Size.y - ch.Bearing.y) * scale;
 
-        float w = ch.Size.x * scale;
-        float h = ch.Size.y * scale;
+        const float w = ch.Size.x * scale;
+        const float h = ch.Size.y * scale;
         // update VBO for each character
         float vertices[6][4] = {
             {xPos, yPos + h, 0.0f, 0.0f},

@@ -32,7 +32,7 @@ public:
 
     explicit TextDisplay(const Shader& shader);
 
-    void renderText(std::string text, float x, float y, float scale, glm::vec3 color);
+    void renderText(const std::string &text, float x, float y, float scale, glm::vec3 color);
 };
 
 

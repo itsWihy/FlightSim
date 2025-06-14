@@ -27,7 +27,7 @@ add_executable(FlightSimulatorHopefully
         src/text/TextDisplay.cpp
         src/chunks/Chunk.cpp
         src/chunks/ChunkManager.cpp
-        src/YokeSystemInputs.cpp
+        src/inputs/YokeSystemInputs.cpp
 )
 
 target_include_directories(FlightSimulatorHopefully PRIVATE /usr/local/include /usr/include/freetype2)
