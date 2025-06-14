@@ -19,7 +19,7 @@ const std::vector<Vertex> &vertices{
     {{1.0f, 1.0f, 0.0f}, {1.0f, 1.0f, 1.0f}}, // top-right, white
 };
 
-std::vector<GLuint> indices{
+const std::vector<GLuint> indices{
     2, 0, 1,
     3, 2, 1
 };
