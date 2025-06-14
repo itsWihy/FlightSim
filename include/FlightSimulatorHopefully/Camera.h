@@ -6,6 +6,8 @@
 #include <GLFW/glfw3.h>
 #include <glm/gtc/type_ptr.hpp>
 
+#include "YokeSystemInputs.h"
+
 class Camera {
 public:
     glm::vec3 Position{};
@@ -25,7 +27,7 @@ public:
     Camera(int width, int height, glm::vec3 position, float FOVdegrees, float nearPlane, float farPlane);
 
     void updateCameraMatrix(const Shader& shader) const;
-    void inputs(GLFWwindow* window);
+    void inputs(GLFWwindow* window, const YokeSystem& yokeSystem);
 
 
 };

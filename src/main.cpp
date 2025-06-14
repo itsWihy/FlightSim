@@ -3,6 +3,7 @@
 #include "../include/FlightSimulatorHopefully/Mesh.h"
 
 #include "../include/FlightSimulatorHopefully/ThirdPartyLibsInitializer.h"
+#include "../include/FlightSimulatorHopefully/YokeSystemInputs.h"
 #include "../include/FlightSimulatorHopefully/chunk/Chunk.h"
 #include "../include/FlightSimulatorHopefully/chunk/ChunkManager.h"
 #include "../include/FlightSimulatorHopefully/text/TextDisplay.h"
@@ -52,6 +53,7 @@ int main() {
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
     Camera camera(width, height, glm::vec3(0.0f, 0.0f, 2.0f), 90.0f, 0.1f, 100.0f);
+    YokeSystem yokeInputs{};
 
     const Shader textShader(
         "/home/Wihy/Projects/CPP/FlightSimulatorHopefully/resources/shaders/text.vert",
@@ -66,35 +68,41 @@ int main() {
     double lastTime = glfwGetTime();
     int nbFrames = 0;
 
-    double fps = 0;
+    double fpsCount = 0;
 
     while (!glfwWindowShouldClose(window)) {
-        double currentTime = glfwGetTime();
+        const double currentTime = glfwGetTime();
         double delta = currentTime - lastTime;
 
         nbFrames++;
         if ( delta >= 1.0 ){
-            fps = static_cast<double>(nbFrames) / delta;
+            fpsCount = static_cast<double>(nbFrames) / delta;
 
             nbFrames = 0;
             lastTime = currentTime;
         }
+
+        yokeInputs.refreshData();
 
         glClearColor(0.52f, 0.807f, 0.95f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
         shaderProgram.activateShaders();
 
-        camera.inputs(window);
+        camera.inputs(window, yokeInputs);
 
         chunkManager.renderNearChunks(shaderProgram, camera);
 
-        textDisplay.renderText("Position: " + std::to_string(camera.Position.z), 175.0f, 25.0f, 0.5f,
-                               glm::vec3(1, 1, 1));
-        textDisplay.renderText("Speed: " + std::to_string(camera.speed), 25.0f, 25.0f, 0.5f, glm::vec3(1, 1, 1));
+        std::string pos = std::format("Pos({}, {}, {})", camera.Position.x, camera.Position.y, camera.Position.z);
+        std::string speed = std::format("Speed({})", camera.speed);
+        std::string fps = std::format("Fps({})", fpsCount);
+        std::string thrust2 = std::format("Thrust({})", yokeInputs.getDataNormalized(AxisTypes::WORKING_THRUST));
 
-        textDisplay.renderText("FPS: " + std::to_string(fps), 25.0f, 500.0f, 0.5f, glm::vec3(1, 1, 1));
+        textDisplay.renderText(speed, 25.0f, 25.0f, 0.5f, glm::vec3(1, 1, 1));
+        textDisplay.renderText(pos , 25.0f, 125.0f, 0.5f,glm::vec3(0.2, 1, 0.2));
+        textDisplay.renderText(thrust2 , 350.0f, 25.0f, 0.5f,glm::vec3(1, 1, 1));
 
+        textDisplay.renderText(fps, 25.0f, 750.0f, 0.5f, glm::vec3(1, 1, 1));
 
         glfwSwapBuffers(window);
         glfwPollEvents();
@@ -109,8 +117,6 @@ int main() {
 
 
 //TODO:
-// FIX HORRIBLE PERFORMANCe! YOU SHOULD ONLY HAVE __ONE__ VBO VAO AND EBO!!! NOT HUNDREDS! LEARN More ABOut them and FIX IT!
-// inifnite grid!
 // more sophisticated movement support
 // infinite terrain! add some blocks here and there!
 // add Pilot HUD like thing with current level and rotation and all!

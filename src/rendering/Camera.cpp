@@ -11,19 +11,24 @@ void Camera::updateCameraMatrix(const Shader &shader) const {
     glUniformMatrix4fv(glGetUniformLocation(shader.ID, "cameraMatrix"), 1, GL_FALSE, glm::value_ptr(projection * view));
 }
 
-void Camera::inputs(GLFWwindow *window) {
+void Camera::inputs(GLFWwindow *window, const YokeSystem& yokeSystem) {
     Position += speed * Orientation;
     speed += acceleration;
 
-    if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS) {
-        speed = 0.1f;
-    }
+    // if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS) {
+    //     speed = 0.2f;
+    // }
+    //
+    // if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS) {
+    //     speed = -0.2f;
+    // }
+    //
+    // if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS) {
+    //     speed = 0;
+    // }
 
-    if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS) {
-        speed = -0.1f;
-    }
+    // acceleration += yokeSystem.getDataNormalized(AxisTypes::THRUST) / 100.0;
+    Orientation.y += yokeSystem.getDataNormalized(AxisTypes::STEERING_PUSH_PULL) / 10.0;
 
-    if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS) {
-        speed = 0;
-    }
+    acceleration = yokeSystem.getDataNormalized(AxisTypes::WORKING_THRUST) / 100.0;
 }
