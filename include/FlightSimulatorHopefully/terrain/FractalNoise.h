@@ -1,3 +1,5 @@
+#pragma once
+
 #include <array>
 #include <cmath>
 #include <cstdint>
@@ -22,8 +24,8 @@ inline double fractalNoise(const double x, const double y, const int octaves = 4
 
     auto grad = [](const uint8_t hash, const double x, const double y) noexcept {
         const uint8_t h = hash & 3;
-        const double u = (h & 1) ? -x : x;
-        const double v = (h & 2) ? -y : y;
+        const double u = h & 1 ? -x : x;
+        const double v = h & 2 ? -y : y;
         return u + v;
     };
 
@@ -36,13 +38,13 @@ inline double fractalNoise(const double x, const double y, const int octaves = 4
         const double u = fade(x);
         const double v = fade(y);
 
-        const uint8_t A = (perm[X] + Y) & 255;
-        const uint8_t B = (perm[(X+1) & 255] + Y) & 255;
+        const uint8_t A = perm[X] + Y & 255;
+        const uint8_t B = perm[X+1 & 255] + Y & 255;
 
         const double p0 = grad(perm[A], x, y);
         const double p1 = grad(perm[B], x-1, y);
-        const double p2 = grad(perm[(A+1) & 255], x, y-1);
-        const double p3 = grad(perm[(B+1) & 255], x-1, y-1);
+        const double p2 = grad(perm[A+1 & 255], x, y-1);
+        const double p3 = grad(perm[B+1 & 255], x-1, y-1);
 
         return p0 + u*(p1-p0) + v*(p2 + u*(p3-p2) - (p0 + u*(p1-p0)));
     };
@@ -59,6 +61,6 @@ inline double fractalNoise(const double x, const double y, const int octaves = 4
         frequency *= 2.0;
     }
 
-    const double value = (total / maxAmplitude) * 0.5 + 0.5;
-    return (value < 0.0) ? 0.0 : (value > 1.0) ? 1.0 : value;
+    const double value = total / maxAmplitude * 0.5 + 0.5;
+    return value < 0.0 ? 0.0 : value > 1.0 ? 1.0 : value;
 }
