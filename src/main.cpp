@@ -12,7 +12,7 @@ inline void resizingCallback(GLFWwindow *window, int width, int height) {
     glViewport(0, 0, width, height);
 }
 
-const std::vector<Vertex> &vertices{
+const std::vector<Vertex> vertices{
     {{-1.0f, -1.0f, 0.0f}, {0.0f, 0.0f, 1.0f}}, // bottom-left, red
     {{-1.0f, 1.0f, 0.0f}, {0.0f, 1.0f, 1.0f}}, // top-left, green
     {{1.0f, -1.0f, 0.0f}, {0.0f, 0.2f, 1.0f}}, // bottom-right, blue
@@ -39,11 +39,6 @@ int main() {
 
     glfwSetFramebufferSizeCallback(window, resizingCallback);
 
-    Shader shaderProgram(
-        "/home/Wihy/Projects/CPP/FlightSimulatorHopefully/resources/shaders/default.vert",
-        "/home/Wihy/Projects/CPP/FlightSimulatorHopefully/resources/shaders/default.frag");
-
-
     glFrontFace(GL_CW);
     glCullFace(GL_FRONT);
     glEnable(GL_CULL_FACE);
@@ -52,18 +47,23 @@ int main() {
     glEnable(GL_BLEND);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
-    Camera camera(width, height, glm::vec3(0.0f, 0.0f, 2.0f), 90.0f, 0.1f, 100.0f);
-    YokeSystem yokeInputs{};
+    const Shader shaderProgram(
+        "/home/Wihy/Projects/CPP/FlightSimulatorHopefully/resources/shaders/default.vert",
+        "/home/Wihy/Projects/CPP/FlightSimulatorHopefully/resources/shaders/default.frag");
 
     const Shader textShader(
         "/home/Wihy/Projects/CPP/FlightSimulatorHopefully/resources/shaders/text.vert",
         "/home/Wihy/Projects/CPP/FlightSimulatorHopefully/resources/shaders/text.frag");
 
+
+    Camera camera(width, height, glm::vec3(0.0f, 0.0f, 2.0f), 90.0f, 0.1f, 100.0f);
+    YokeSystem yokeInputs{};
+
     TextDisplay textDisplay(textShader);
 
-    const Mesh chunksesMesh {vertices, indices};
+    const Mesh chunkMesh {vertices, indices};
 
-    ChunkManager chunkManager {chunksesMesh};
+    ChunkManager chunkManager {chunkMesh};
 
     double lastTime = glfwGetTime();
     int nbFrames = 0;

@@ -7,7 +7,7 @@
 #include <iostream>
 #include <glm/gtc/type_ptr.hpp>
 
-TextDisplay::TextDisplay(const Shader& shader) : shader( shader ), VBO1({}) {
+TextDisplay::TextDisplay(const Shader &shader) : shader(shader) {
     glm::mat4 projection = glm::ortho(0.0f, static_cast<float>(800), 0.0f, static_cast<float>(800));
     shader.activateShaders();
     glUniformMatrix4fv(glGetUniformLocation(shader.ID, "projection"), 1, GL_FALSE, glm::value_ptr(projection));
@@ -25,7 +25,8 @@ TextDisplay::TextDisplay(const Shader& shader) : shader( shader ), VBO1({}) {
     }
 
     FT_Face face;
-    if (FT_New_Face(ft, "/home/Wihy/Projects/CPP/FlightSimulatorHopefully/resources/fonts/Antonio-Bold.ttf", 0, &face)) {
+    if (FT_New_Face(ft, "/home/Wihy/Projects/CPP/FlightSimulatorHopefully/resources/fonts/Antonio-Bold.ttf", 0,
+                    &face)) {
         std::cout << "ERROR::FREETYPE: Failed to load font" << std::endl;
     }
 
@@ -92,7 +93,7 @@ void TextDisplay::renderText(const std::string &text, float x, float y, float sc
     VAO1.bind();
 
     // iterate through all characters
-    for (char c : text) {
+    for (char c: text) {
         Character ch = Characters[c];
 
         const float xPos = x + ch.Bearing.x * scale;

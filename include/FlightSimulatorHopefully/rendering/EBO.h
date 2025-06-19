@@ -8,7 +8,10 @@ class EBO {
 public:
     GLuint ID {};
 
-    EBO(const std::vector<GLuint>& indices);
+    explicit EBO();
+
+    template<typename T>
+    explicit EBO(const T& indices);
 
     void bind() const;
     void unbind() const;

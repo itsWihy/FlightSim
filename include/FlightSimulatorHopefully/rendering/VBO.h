@@ -13,7 +13,10 @@ class VBO {
 public:
     GLuint ID {};
 
-    explicit VBO(const std::vector<Vertex>& vertices);
+    explicit VBO();
+
+    template<typename T>
+    explicit VBO(const T& vertices);
 
     void bind() const;
     void unbind() const;
