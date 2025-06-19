@@ -7,16 +7,6 @@
 #include <glad/glad.h>
 
 
-template<typename T>
-VBO::VBO(const T& vertices) {
-    glGenBuffers(1, &ID);
-
-    glBindBuffer(GL_ARRAY_BUFFER, ID);
-    glBufferData(GL_ARRAY_BUFFER, std::ssize(vertices) * sizeof(Vertex), vertices.data(), GL_STATIC_DRAW);
-}
-
-VBO::VBO() : VBO(std::vector<Vertex>{}){
-}
 
 
 void VBO::bind() const {

@@ -13,10 +13,13 @@ class VBO {
 public:
     GLuint ID {};
 
-    explicit VBO();
-
     template<typename T>
-    explicit VBO(const T& vertices);
+    explicit VBO(const T& vertices) {
+        glGenBuffers(1, &ID);
+
+        glBindBuffer(GL_ARRAY_BUFFER, ID);
+        glBufferData(GL_ARRAY_BUFFER, std::ssize(vertices) * sizeof(Vertex), vertices.data(), GL_STATIC_DRAW);
+    }
 
     void bind() const;
     void unbind() const;

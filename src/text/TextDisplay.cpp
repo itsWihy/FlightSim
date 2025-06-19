@@ -7,7 +7,7 @@
 #include <iostream>
 #include <glm/gtc/type_ptr.hpp>
 
-TextDisplay::TextDisplay(const Shader &shader) : shader(shader) {
+TextDisplay::TextDisplay(const Shader &shader) : shader(shader), VBO1(std::vector<Vertex>{}) {
     glm::mat4 projection = glm::ortho(0.0f, static_cast<float>(800), 0.0f, static_cast<float>(800));
     shader.activateShaders();
     glUniformMatrix4fv(glGetUniformLocation(shader.ID, "projection"), 1, GL_FALSE, glm::value_ptr(projection));

@@ -8,10 +8,13 @@ class EBO {
 public:
     GLuint ID {};
 
-    explicit EBO();
-
     template<typename T>
-    explicit EBO(const T& indices);
+    explicit EBO(const T& indices) {
+        glGenBuffers(1, &ID);
+
+        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ID);
+        glBufferData(GL_ELEMENT_ARRAY_BUFFER, std::ssize(indices) * sizeof(GLuint), indices.data(), GL_STATIC_DRAW);
+    }
 
     void bind() const;
     void unbind() const;
