@@ -6,7 +6,7 @@
 #define CHUNK_H
 #include <map>
 
-#include "../Mesh.h"
+#include "../rendering/Mesh.h"
 
 //World is divided into 8 by 8 chunks. Where (0,0) is 0,0, (1,1) is 8,8, and so on.
 

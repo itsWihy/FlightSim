@@ -22,12 +22,13 @@ add_executable(FlightSimulatorHopefully
         src/rendering/VAO.cpp
         src/rendering/EBO.cpp
         src/rendering/Camera.cpp
-        include/FlightSimulatorHopefully/Mesh.h
+        include/FlightSimulatorHopefully/rendering/Mesh.h
         src/rendering/Mesh.cpp
         src/text/TextDisplay.cpp
         src/chunks/Chunk.cpp
         src/chunks/ChunkManager.cpp
         src/inputs/YokeSystemInputs.cpp
+        src/chunks/ChunkGenerator.cpp
 )
 
 target_include_directories(FlightSimulatorHopefully PRIVATE /usr/local/include /usr/include/freetype2)

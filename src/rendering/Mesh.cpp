@@ -1,4 +1,4 @@
-#include "../../include/FlightSimulatorHopefully/Mesh.h"
+#include "../../include/FlightSimulatorHopefully/rendering/Mesh.h"
 
 void Mesh::draw(const Shader &shader, const Camera &camera, const glm::vec3& position, const glm::vec3& rotation ) const {
     shader.activateShaders();

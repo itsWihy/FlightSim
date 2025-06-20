@@ -5,16 +5,16 @@
 #ifndef MESH_H
 #define MESH_H
 
-#include"rendering/VAO.h"
-#include"rendering/EBO.h"
-#include"Camera.h"
+#include "VAO.h"
+#include "EBO.h"
+#include "../Camera.h"
 
 
 class Mesh {
     const int indicesSize;
 
 public:
-    VAO VAO1;
+    VAO VAO1{};
 
     template<typename T, typename U>
     explicit Mesh(const T& vertices, const U& indices) : indicesSize(indices.size()) {

@@ -12,11 +12,69 @@ void Camera::updateCameraMatrix(const Shader &shader) const {
 }
 
 void Camera::inputs(GLFWwindow *window, const YokeSystem& yokeSystem) {
-    Position += speed * Orientation;
-    speed += acceleration;
+    if (glfwGetKey(window, GLFW_KEY_H) == GLFW_PRESS) {
+        glPolygonMode( GL_FRONT_AND_BACK, GL_LINE );
+    }
 
-    Orientation.y += yokeSystem.getDataNormalized(AxisTypes::STEERING_PUSH_PULL) / 10.0;
-    Orientation.x -= yokeSystem.getDataNormalized(AxisTypes::STEERING_ROTATE) / 10.0;
+    if (glfwGetKey(window, GLFW_KEY_Y) == GLFW_PRESS) {
+        glPolygonMode( GL_FRONT_AND_BACK, GL_FILL );
+    }
 
-    acceleration = yokeSystem.getDataNormalized(AxisTypes::WORKING_THRUST) / 100.0;
+
+	// Handles key inputs
+	if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)
+	{
+		Position += speed * Orientation;
+	}
+	if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS)
+	{
+		Position += speed * -glm::normalize(glm::cross(Orientation, Up));
+	}
+	if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS)
+	{
+		Position += speed * -Orientation;
+	}
+	if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS)
+	{
+		Position += speed * glm::normalize(glm::cross(Orientation, Up));
+	}
+	if (glfwGetKey(window, GLFW_KEY_SPACE) == GLFW_PRESS)
+	{
+		Position += speed * Up;
+	}
+	if (glfwGetKey(window, GLFW_KEY_LEFT_CONTROL) == GLFW_PRESS)
+	{
+		Position += speed * -Up;
+	}
+	if (glfwGetKey(window, GLFW_KEY_LEFT_SHIFT) == GLFW_PRESS)
+	{
+		speed = 0.4f;
+	}
+	else if (glfwGetKey(window, GLFW_KEY_LEFT_SHIFT) == GLFW_RELEASE)
+	{
+		speed = 0.1f;
+	}
+	float yawKeySpeedDeg = 1.0f;
+	if (glfwGetKey(window, GLFW_KEY_Q) == GLFW_PRESS)
+	{
+		// Yaw left: rotate Orientation around Up by +yawKeySpeedDeg
+		float angleRad = glm::radians(yawKeySpeedDeg);
+		glm::mat4 yawMat = glm::rotate(glm::mat4(1.0f), angleRad, Up);
+		Orientation = glm::normalize(glm::vec3(yawMat * glm::vec4(Orientation, 0.0f)));
+	}
+	if (glfwGetKey(window, GLFW_KEY_E) == GLFW_PRESS)
+	{
+		// Yaw right: rotate Orientation around Up by -yawKeySpeedDeg
+		float angleRad = glm::radians(-yawKeySpeedDeg);
+		glm::mat4 yawMat = glm::rotate(glm::mat4(1.0f), angleRad, Up);
+		Orientation = glm::normalize(glm::vec3(yawMat * glm::vec4(Orientation, 0.0f)));
+	}
+
+    // Position += speed * Orientation;
+    // speed += acceleration;
+    //
+    // Orientation.y += yokeSystem.getDataNormalized(AxisTypes::STEERING_PUSH_PULL) / 10.0;
+    // Orientation.x -= yokeSystem.getDataNormalized(AxisTypes::STEERING_ROTATE) / 10.0;
+    //
+    // acceleration = yokeSystem.getDataNormalized(AxisTypes::WORKING_THRUST) / 100.0;
 }
