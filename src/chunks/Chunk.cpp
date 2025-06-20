@@ -6,7 +6,7 @@
 // has 16^2 meshes.
 //hide / show / delete abilities.
 
-#include "../../include/FlightSimulatorHopefully/chunk/Chunk.h"
+#include "../../include/FlightSimulatorHopefully/terrain/Chunk.h"
 
 Chunk::Chunk(const glm::vec2 &chunkPosition, const Mesh& chunkMesh)
     : chunkMesh(chunkMesh), chunkPosition(chunkPosition) {

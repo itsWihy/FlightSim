@@ -15,8 +15,7 @@ private:
     std::array<glm::vec3, 64> facePositions;
 
     const Mesh& chunkMesh;
-    const glm::vec3 rotation = {90, 0, 0};
-
+    const glm::vec3 rotation = {0, 0, 0};
     const glm::vec2 chunkPosition {};
 
 public:

@@ -4,8 +4,7 @@
 
 #include "../include/FlightSimulatorHopefully/ThirdPartyLibsInitializer.h"
 #include "../include/FlightSimulatorHopefully/YokeSystemInputs.h"
-#include "../include/FlightSimulatorHopefully/chunk/ChunkManager.h"
-#include "../include/FlightSimulatorHopefully/terrain/ChunkGenerator.h"
+#include "../include/FlightSimulatorHopefully/terrain/ChunkManager.h"
 #include "../include/FlightSimulatorHopefully/text/TextDisplay.h"
 
 inline void resizingCallback(GLFWwindow *window, const int width, const int height) {
@@ -64,9 +63,8 @@ int main() {
 
     const Mesh chunkMesh {vertices, indices};
 
-    ChunkManager chunkManager {chunkMesh};
+    ChunkManager chunkManager {};
 
-    ChunkGenerator chunkGenerator {};
 
     double lastTime = glfwGetTime();
     int nbFrames = 0;
@@ -94,8 +92,7 @@ int main() {
 
         camera.inputs(window, yokeInputs);
 
-        // chunkManager.renderNearChunks(shaderProgram, camera);
-        chunkGenerator.drawChunk(shaderProgram, camera);
+        chunkManager.renderNearChunks(shaderProgram, camera);
 
         std::string pos = std::format("Pos({}, {}, {})", camera.Position.x, camera.Position.y, camera.Position.z);
         std::string speed = std::format("Speed({})", camera.speed);

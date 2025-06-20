@@ -31,7 +31,7 @@ public:
             EBO.unbind();
     }
 
-    void draw(const Shader &shader, const Camera &camera, const glm::vec3& position, const glm::vec3& rotation ) const;
+    void draw(const Shader &shader, const Camera &camera, const glm::vec3& positionOffset, const glm::vec3& rotationOffset ) const;
 };
 
 #endif //MESH_H
