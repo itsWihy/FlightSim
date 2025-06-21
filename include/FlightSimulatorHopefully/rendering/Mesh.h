@@ -11,13 +11,15 @@
 
 
 class Mesh {
-    const int indicesSize;
+    int indicesSize;
 
 public:
     VAO VAO1{};
 
+    Mesh()=default;
+
     template<typename T, typename U>
-    explicit Mesh(const T& vertices, const U& indices) : indicesSize(indices.size()) {
+    Mesh(const T& vertices, const U& indices) : indicesSize(indices.size()) {
             VAO1.bind();
 
             const VBO VBO{vertices};

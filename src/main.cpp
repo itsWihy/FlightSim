@@ -24,8 +24,8 @@ const std::vector<GLuint> indices{
 };
 
 
-constexpr float width = 800;
-constexpr float height = 800;
+constexpr float width = 800.0f;
+constexpr float height = 800.0f;
 
 int main() {
     initializeGLFW();
@@ -56,15 +56,12 @@ int main() {
         "/home/Wihy/Projects/CPP/FlightSimulatorHopefully/resources/shaders/text.frag");
 
 
-    Camera camera(width, height, glm::vec3(0.0f, 0.0f, 2.0f), 90.0f, 0.1f, 100.0f);
+    Camera camera(width, height, glm::vec3(0.0f, 0.0f, 2.0f), 90.0f, 0.1f, 300.0f);
     YokeSystem yokeInputs{};
 
     TextDisplay textDisplay(textShader);
 
-    const Mesh chunkMesh {vertices, indices};
-
     ChunkManager chunkManager {};
-
 
     double lastTime = glfwGetTime();
     int nbFrames = 0;
@@ -116,10 +113,18 @@ int main() {
 }
 
 
+//TODO: Terrian
+// frustum culling
+// textures support
+// back-face culling
+// occlusion culling
+// legitamate face culling - you do be a bit goofing with that
+// lod
+// greedy meshing :skull:
+// beautifuler generation. Mountains. BuildingS?
+// CRASH AND MINE!!!!
 
-//TODO:
-// more sophisticated movement support
-// infinite terrain! add some blocks here and there!
+//TODO: Flight sim
 // add Pilot HUD like thing with current level and rotation and all!
 // add special joystick support
 // add shooting
