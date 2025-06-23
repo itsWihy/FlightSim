@@ -33,6 +33,8 @@ int main() {
     GLFWwindow *window = glfwCreateWindow(width, height, "Flight simuutor", nullptr, nullptr);
     glfwMakeContextCurrent(window);
 
+    glfwSwapInterval(0);
+
     gladLoadGL();
     glViewport(0, 0, 800, 600);
 
@@ -40,7 +42,7 @@ int main() {
 
     // glFrontFace(GL_CW);
     // glCullFace(GL_FRONT);
-    // glEnable(GL_CULL_FACE);
+    glEnable(GL_CULL_FACE);
 
     glEnable(GL_DEPTH_TEST);
 
@@ -118,12 +120,11 @@ int main() {
 
 
 //TODO: Terrian
-// frustum culling
 // textures support
+// lod
 // back-face culling
 // occlusion culling
 // legitamate face culling - you do be a bit goofing with that
-// lod
 // greedy meshing :skull:
 // beautifuler generation. Mountains. BuildingS?
 // CRASH AND MINE!!!!

@@ -54,7 +54,7 @@ void ChunkManager::renderNearChunks(const Shader &shader, const Camera &camera) 
             const float camZ = cameraSpace.y;
 
             if (camZ < 0.0f) continue;
-            if (std::abs(camX) > camZ * tanHalfFov + margin) continue; //3 is here to make sure edges aren't visible.
+            if (std::abs(camX) > camZ * tanHalfFov + margin) continue;
 
             if (!cachedChunks.contains(worldCoords))
                 cachedChunks.try_emplace(worldCoords, generateChunkFromCoords(x, z));
@@ -73,20 +73,21 @@ void ChunkManager::renderNearChunks(const Shader &shader, const Camera &camera) 
 
 Mesh ChunkManager::generateChunkFromCoords(const int chunkX, const int chunkZ) {
     constexpr int squareLength{CHUNK_LENGTH + 1};
+    constexpr float noiseScalar{0.1f};
 
     std::array<Vertex, 81> vertices{};
 
-    for (int i = 0; i < std::ssize(vertices); ++i) {
-        constexpr float noiseScalar{0.1f};
+    const int worldX = chunkX * 8;
+    const int worldZ = chunkZ * 8;
 
+    for (int i = 0; i < std::ssize(vertices); ++i) {
         const int verticesX = i / squareLength;
         const int verticesZ = i % squareLength;
 
-        const float height = fractalNoise(noiseScalar * (verticesX + chunkX * 8.0f),
-                                          noiseScalar * (verticesZ + chunkZ * 8.0f));
+        const float height = fractalNoise(noiseScalar * (verticesX + worldX), noiseScalar * (verticesZ + worldZ));
 
         vertices[i] = {
-            {chunkX * 8 + verticesX, 10 * height, chunkZ * 8 + verticesZ}, {0.3 * height, 0.5 * height, 0.1 * height}
+            {worldX + verticesX, 10 * height, worldZ + verticesZ}, {0.3 * height, 0.5 * height, 0.1 * height}
         };
     }
 
