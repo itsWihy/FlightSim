@@ -10,9 +10,9 @@
 
 class Camera {
 public:
+    glm::vec3 Up = glm::vec3(0.0f, 1.0f, 0.0f);
     glm::vec3 Position{};
     glm::vec3 Orientation = glm::vec3(0.0f, 0.0f, 1.0f);
-    glm::vec3 Up = glm::vec3(0.0f, 1.0f, 0.0f);
 
     int width;
     int height;
@@ -28,8 +28,6 @@ public:
 
     void updateCameraMatrix(const Shader& shader) const;
     void inputs(GLFWwindow* window, const YokeSystem& yokeSystem);
-
-
 };
 
 #endif //CAMERA_H

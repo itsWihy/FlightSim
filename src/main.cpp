@@ -56,7 +56,7 @@ int main() {
         "/home/Wihy/Projects/CPP/FlightSimulatorHopefully/resources/shaders/text.frag");
 
 
-    Camera camera(width, height, glm::vec3(0.0f, 0.0f, 2.0f), 90.0f, 0.1f, 300.0f);
+    Camera camera(width, height, glm::vec3(0.0f, 0.0f, 2.0f), 90.0f, 0.1f, 500.0f);
     YokeSystem yokeInputs{};
 
     TextDisplay textDisplay(textShader);
@@ -92,12 +92,16 @@ int main() {
         chunkManager.renderNearChunks(shaderProgram, camera);
 
         std::string pos = std::format("Pos({}, {}, {})", camera.Position.x, camera.Position.y, camera.Position.z);
+        std::string orientation = std::format("Orientation({}, {}, {})", camera.Orientation.x, camera.Orientation.y, camera.Orientation.z);
+
         std::string speed = std::format("Speed({})", camera.speed);
         std::string fps = std::format("Fps({})", fpsCount);
         std::string thrust2 = std::format("Thrust({})", yokeInputs.getDataNormalized(AxisTypes::WORKING_THRUST));
 
-        textDisplay.renderText(speed, 25.0f, 25.0f, 0.5f, glm::vec3(1, 1, 1));
         textDisplay.renderText(pos , 25.0f, 125.0f, 0.5f,glm::vec3(0.2, 1, 0.2));
+        textDisplay.renderText(orientation, 25.0f, 175.0f, 0.5f, glm::vec3(0.2, 1, 0.2));
+
+        textDisplay.renderText(speed, 25.0f, 25.0f, 0.5f, glm::vec3(1, 1, 1));
         textDisplay.renderText(thrust2 , 350.0f, 25.0f, 0.5f,glm::vec3(1, 1, 1));
 
         textDisplay.renderText(fps, 25.0f, 750.0f, 0.5f, glm::vec3(1, 1, 1));

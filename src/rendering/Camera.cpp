@@ -54,7 +54,7 @@ void Camera::inputs(GLFWwindow *window, const YokeSystem& yokeSystem) {
 	{
 		speed = 0.2f;
 	}
-	float yawKeySpeedDeg = 2.0f;
+	const float yawKeySpeedDeg = 2.0f;
 	if (glfwGetKey(window, GLFW_KEY_Q) == GLFW_PRESS)
 	{
 		// Yaw left: rotate Orientation around Up by +yawKeySpeedDeg
@@ -62,6 +62,7 @@ void Camera::inputs(GLFWwindow *window, const YokeSystem& yokeSystem) {
 		glm::mat4 yawMat = glm::rotate(glm::mat4(1.0f), angleRad, Up);
 		Orientation = glm::normalize(glm::vec3(yawMat * glm::vec4(Orientation, 0.0f)));
 	}
+
 	if (glfwGetKey(window, GLFW_KEY_E) == GLFW_PRESS)
 	{
 		// Yaw right: rotate Orientation around Up by -yawKeySpeedDeg

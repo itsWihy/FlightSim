@@ -11,27 +11,55 @@
 #include <numeric>
 #include <ranges>
 
-//TODO: Use player position, not CMAERA POSITION!
 
 void ChunkManager::renderNearChunks(const Shader &shader, const Camera &camera) {
-    constexpr double degToRad = std::numbers::pi / 180;
-    std::vector<Mesh> viewableChunks{};
+    constexpr int margin = 3;
 
-    const ChunkCoords cameraCoords{static_cast<int>(camera.Position.x) / 8, static_cast<int>(camera.Position.z) / 8};
-//TODO: Take into account camera yaw && camera height
-    const auto farPlaneInChunkCoords = static_cast<int>(camera.farPlane) / 8;
-    const auto tanRatio =  glm::tan(camera.FOVdegrees * degToRad / 2);
+    const ChunkCoords cameraCoords{static_cast<int>(std::floor(camera.Position.x / 8.0f)), static_cast<int>(std::floor(camera.Position.z / 8.0f))};
 
-    for (auto z = farPlaneInChunkCoords + cameraCoords.z; z >= cameraCoords.z - 12; --z) {
-        const auto baseLength = static_cast<int>((z + 8 - cameraCoords.z) * tanRatio);
+    const double yaw = atan2(camera.Orientation.x, camera.Orientation.z);
 
-        for (int x = -baseLength + cameraCoords.x; x < baseLength + cameraCoords.x; ++x) {
-            const ChunkCoords coords{x, z};
+    const auto cosY = static_cast<float>(std::cos(yaw));
+    const auto sinY = static_cast<float>(std::sin(yaw));
 
-            if (!cachedChunks.contains(coords))
-                cachedChunks.try_emplace(coords, generateChunkFromCoords(x, z));
+    const auto rotateToCameraSpace = glm::mat2(
+        glm::vec2(cosY, sinY),
+        glm::vec2(-sinY, cosY)
+    );
 
-            viewableChunks.push_back(cachedChunks[coords]);
+    const auto tanHalfFov = std::tan(camera.FOVdegrees * degToRad / 2.0);
+
+    const auto farLengthInChunkCoords = static_cast<int>(std::ceil(camera.farPlane / 8.0));
+
+    const int minX = cameraCoords.x - farLengthInChunkCoords;
+    const int maxX = cameraCoords.x + farLengthInChunkCoords;
+    const int minZ = cameraCoords.z - farLengthInChunkCoords;
+    const int maxZ = cameraCoords.z + farLengthInChunkCoords;
+
+    std::vector<Mesh> viewableChunks;
+    viewableChunks.reserve((maxX - minX + 1) * (maxZ - minZ + 1));
+
+    for (int z = minZ; z <= maxZ; z++) {
+        for (int x = minX; x <= maxX; x++) {
+            const ChunkCoords worldCoords{x, z};
+
+            glm::vec2 relativeChunkPoseFromCamera(
+                static_cast<float>(x - cameraCoords.x),
+                static_cast<float>(z - cameraCoords.z)
+            );
+
+            const glm::vec2 cameraSpace = rotateToCameraSpace * relativeChunkPoseFromCamera;
+
+            const float camX = cameraSpace.x;
+            const float camZ = cameraSpace.y;
+
+            if (camZ < 0.0f) continue;
+            if (std::abs(camX) > camZ * tanHalfFov + margin) continue; //3 is here to make sure edges aren't visible.
+
+            if (!cachedChunks.contains(worldCoords))
+                cachedChunks.try_emplace(worldCoords, generateChunkFromCoords(x, z));
+
+            viewableChunks.push_back(cachedChunks[worldCoords]);
         }
     }
 
@@ -42,12 +70,11 @@ void ChunkManager::renderNearChunks(const Shader &shader, const Camera &camera) 
     viewableChunks.clear();
 }
 
-//Coords in chunk based. Generates
+
 Mesh ChunkManager::generateChunkFromCoords(const int chunkX, const int chunkZ) {
     constexpr int squareLength{CHUNK_LENGTH + 1};
 
     std::array<Vertex, 81> vertices{};
-    std::array<GLuint, 432> indices{};
 
     for (int i = 0; i < std::ssize(vertices); ++i) {
         constexpr float noiseScalar{0.1f};
@@ -55,12 +82,20 @@ Mesh ChunkManager::generateChunkFromCoords(const int chunkX, const int chunkZ) {
         const int verticesX = i / squareLength;
         const int verticesZ = i % squareLength;
 
-        const float height = fractalNoise(noiseScalar * (verticesX + chunkX * 8.0f), noiseScalar * (verticesZ + chunkZ * 8.0f));
+        const float height = fractalNoise(noiseScalar * (verticesX + chunkX * 8.0f),
+                                          noiseScalar * (verticesZ + chunkZ * 8.0f));
 
         vertices[i] = {
             {chunkX * 8 + verticesX, 10 * height, chunkZ * 8 + verticesZ}, {0.3 * height, 0.5 * height, 0.1 * height}
         };
     }
+
+    return Mesh{vertices, indicesPrecomputed};
+}
+
+//Here so can be reused if changing the chunk size
+std::array<GLuint, 432> computeIndices(const int squareLength) {
+    std::array<GLuint, 432> indices{};
 
     int currentSquare = 0;
 
@@ -78,5 +113,11 @@ Mesh ChunkManager::generateChunkFromCoords(const int chunkX, const int chunkZ) {
         currentSquare++;
     }
 
-    return Mesh{vertices, indices};
+    std::cout << "-----------------------------INDICIES-----------------" << std::endl;
+    for (const auto indicy: indices) {
+        std::cout << indicy << ", ";
+    }
+    std::cout << "----------------------------------------------------" << std::endl;
+
+    return indices;
 }
