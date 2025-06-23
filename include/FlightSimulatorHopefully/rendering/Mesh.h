@@ -27,6 +27,7 @@ public:
 
             VAO1.linkAttribute(VBO, 0, 3, GL_FLOAT, sizeof(Vertex), (void *) nullptr);
             VAO1.linkAttribute(VBO, 1, 3, GL_FLOAT, sizeof(Vertex), (void *) (3 * sizeof(float)));
+            VAO1.linkAttribute(VBO, 2, 2, GL_FLOAT, sizeof(Vertex), (void *) (6 * sizeof(float)));
 
             VAO1.unbind();
             VBO.unbind();

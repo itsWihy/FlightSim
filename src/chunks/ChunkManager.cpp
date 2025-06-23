@@ -80,6 +80,9 @@ Mesh ChunkManager::generateChunkFromCoords(const int chunkX, const int chunkZ) {
     const int worldX = chunkX * 8;
     const int worldZ = chunkZ * 8;
 
+    int thing1 = 0;
+    int thing2 = 0;
+
     for (int i = 0; i < std::ssize(vertices); ++i) {
         const int verticesX = i / squareLength;
         const int verticesZ = i % squareLength;
@@ -87,8 +90,31 @@ Mesh ChunkManager::generateChunkFromCoords(const int chunkX, const int chunkZ) {
         const float height = fractalNoise(noiseScalar * (verticesX + worldX), noiseScalar * (verticesZ + worldZ));
 
         vertices[i] = {
-            {worldX + verticesX, 10 * height, worldZ + verticesZ}, {0.3 * height, 0.5 * height, 0.1 * height}
+            {worldX + verticesX, 10 * height, worldZ + verticesZ}, {0.3 * height, 0.5 * height, 0.1 * height},
+            {thing1, thing2}
         };
+
+        if (thing1 == 0 && thing2 == 0) {
+            thing1 = 1;
+            continue;
+        }
+
+        if (thing1 == 1 && thing2 == 0) {
+            thing1 = 0;
+            thing2 = 1;
+            continue;
+        }
+
+        if (thing1 == 0 && thing2 == 1) {
+            thing1 = 1;
+            thing2 = 1;
+            continue;
+        }
+
+        if (thing1 == 1 && thing2 == 1) {
+            thing1 = 0;
+            thing2 = 0;
+        }
     }
 
     return Mesh{vertices, indicesPrecomputed};

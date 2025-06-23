@@ -2,11 +2,13 @@
 #define VBO_H
 #include <vector>
 #include <glad/glad.h>
+#include <glm/vec2.hpp>
 #include <glm/vec3.hpp>
 
 struct Vertex {
     glm::vec3 position;
     glm::vec3 color;
+    glm::vec2 textureMapping;
 };
 
 class VBO {

@@ -4,8 +4,11 @@
 
 #include "../include/FlightSimulatorHopefully/ThirdPartyLibsInitializer.h"
 #include "../include/FlightSimulatorHopefully/YokeSystemInputs.h"
+#include "../include/FlightSimulatorHopefully/rendering/Texture.h"
 #include "../include/FlightSimulatorHopefully/terrain/ChunkManager.h"
 #include "../include/FlightSimulatorHopefully/text/TextDisplay.h"
+#include "../include/FlightSimulatorHopefully/FPSCounter.h"
+
 
 inline void resizingCallback(GLFWwindow *window, const int width, const int height) {
     glViewport(0, 0, width, height);
@@ -58,36 +61,29 @@ int main() {
         "/home/Wihy/Projects/CPP/FlightSimulatorHopefully/resources/shaders/text.frag");
 
 
+    TextDisplay textDisplay(textShader);
+
     Camera camera(width, height, glm::vec3(0.0f, 0.0f, 2.0f), 90.0f, 0.1f, 500.0f);
     YokeSystem yokeInputs{};
 
-    TextDisplay textDisplay(textShader);
+    Texture dirt{
+        "/home/Wihy/Projects/CPP/FlightSimulatorHopefully/resources/textures/dirt.png", GL_TEXTURE_2D, GL_TEXTURE0, GL_RGBA, GL_UNSIGNED_BYTE};
+    dirt.textureUnit(shaderProgram, "tex0",0);
 
     ChunkManager chunkManager {};
-
-    double lastTime = glfwGetTime();
-    int nbFrames = 0;
-
-    double fpsCount = 0;
+    FPSCounter fpsCounter{};
 
     while (!glfwWindowShouldClose(window)) {
-        const double currentTime = glfwGetTime();
-        double delta = currentTime - lastTime;
-
-        nbFrames++;
-        if ( delta >= 1.0 ){
-            fpsCount = static_cast<double>(nbFrames) / delta;
-
-            nbFrames = 0;
-            lastTime = currentTime;
-        }
+        fpsCounter.refreshFPSCounter();
 
         yokeInputs.refreshData();
 
-        glClearColor(0.52f, 0.807f, 0.95f, 1.0f);
+        glClearColor(0.32f, 0.607f, 0.75f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
         shaderProgram.activateShaders();
+
+        dirt.bind();
 
         camera.inputs(window, yokeInputs);
 
@@ -97,14 +93,14 @@ int main() {
         std::string orientation = std::format("Orientation({}, {}, {})", camera.Orientation.x, camera.Orientation.y, camera.Orientation.z);
 
         std::string speed = std::format("Speed({})", camera.speed);
-        std::string fps = std::format("Fps({})", fpsCount);
-        std::string thrust2 = std::format("Thrust({})", yokeInputs.getDataNormalized(AxisTypes::WORKING_THRUST));
+        std::string fps = std::format("Fps({})", fpsCounter.getFPS());
+        std::string thrust = std::format("Thrust({})", yokeInputs.getDataNormalized(AxisTypes::WORKING_THRUST));
 
         textDisplay.renderText(pos , 25.0f, 125.0f, 0.5f,glm::vec3(0.2, 1, 0.2));
         textDisplay.renderText(orientation, 25.0f, 175.0f, 0.5f, glm::vec3(0.2, 1, 0.2));
 
         textDisplay.renderText(speed, 25.0f, 25.0f, 0.5f, glm::vec3(1, 1, 1));
-        textDisplay.renderText(thrust2 , 350.0f, 25.0f, 0.5f,glm::vec3(1, 1, 1));
+        textDisplay.renderText(thrust , 350.0f, 25.0f, 0.5f,glm::vec3(1, 1, 1));
 
         textDisplay.renderText(fps, 25.0f, 750.0f, 0.5f, glm::vec3(1, 1, 1));
 
@@ -112,6 +108,7 @@ int main() {
         glfwPollEvents();
     }
 
+    dirt.deleteTexture();
     shaderProgram.deleteShaders();
 
     glfwTerminate();
@@ -127,7 +124,7 @@ int main() {
 // legitamate face culling - you do be a bit goofing with that
 // greedy meshing :skull:
 // beautifuler generation. Mountains. BuildingS?
-// CRASH AND MINE!!!!
+
 
 //TODO: Flight sim
 // add Pilot HUD like thing with current level and rotation and all!
@@ -136,3 +133,7 @@ int main() {
 // add targets
 // add a counter
 // ask someone who did yarpa b what the tasks are, and continue the proj!
+
+//TODO GAMIFICATION.
+// DIFFICULTY: GOD TIER
+// CRASH AND MINE!!!!
