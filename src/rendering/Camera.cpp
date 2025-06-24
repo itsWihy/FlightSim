@@ -20,7 +20,6 @@ void Camera::inputs(GLFWwindow *window, const YokeSystem& yokeSystem) {
         glPolygonMode( GL_FRONT_AND_BACK, GL_FILL );
     }
 
-
 	// Handles key inputs
 	if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)
 	{
